@@ -188,7 +188,7 @@ output "database_name" {
 
 <hr>
 
-<h2>🧹 Destroy Resources</h2>
+'''<h2>🧹 Destroy Resources</h2>
 
 <p>When you’re done testing or deploying, you can clean up all created resources using:</p>
 
@@ -210,7 +210,8 @@ output "database_name" {
 <p align="center">
   Made with ❤️ using <b>Terraform</b> and <b>Microsoft Azure</b>.<br>
   <i>Automate • Deploy • Manage • Scale</i>
-</p>
+</p>'''
+
 
 
 
