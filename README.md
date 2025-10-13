@@ -185,33 +185,3 @@ output "database_name" {
   value       = module.azurerm-sqldb.sqldb-name
   description = "Name of the SQL Database"
 }
-
-<hr>
-
-'''<h2>🧹 Destroy Resources</h2>
-
-<p>When you’re done testing or deploying, you can clean up all created resources using:</p>
-
-<pre><code>terraform destroy -auto-approve</code></pre>
-
-<p><b>Note:</b> Always double-check your current workspace (Dev or Prod) before destroying resources to avoid accidental deletions.</p>
-
-<hr>
-
-<h2>🤝 Contribution</h2>
-
-<p>
-  Contributions are always welcome!<br>
-  If you’d like to enhance or extend this project, please fork the repo and submit a pull request.
-</p>
-
-<hr>
-
-<p align="center">
-  Made with ❤️ using <b>Terraform</b> and <b>Microsoft Azure</b>.<br>
-  <i>Automate • Deploy • Manage • Scale</i>
-</p>'''
-
-
-
-
