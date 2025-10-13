@@ -17,18 +17,22 @@
 ## 🧭 Architecture Overview
 
 <p align="center">
-🌍 <b>Azure Cloud Infrastructure</b><br>
-└── 🗂️ <b>Resource Group</b> (`demo-rg`)<br>
-  └── 🌐 <b>Virtual Network</b> (`demo-vnet`)<br>
-    └── 🌱 <b>Subnets</b> (`frontend`, `backend`, `bastion`, `database`, `management`)<br>
-      └── ⚙️ <b>Load Balancer</b> (`demo-lb`)<br>
-        ├── 🌩️ <b>Public IP</b> (`demo-pip`)<br>
-        ├── 🔗 <b>Backend Pool</b><br>
-        ├── 🚪 <b>Health Probe</b><br>
-        └── ⚖️ <b>Load Balancer Rule</b><br>
-      └── 💻 <b>Virtual Machines</b> (VM1, VM2)<br>
-      └── 🏰 <b>Bastion Host</b> (`demo-bastion`)<br>
-      └── 🗄️ <b>SQL Server & Database</b> (`demo-sqlsrv`, `demo-db`)
+<pre>
+
+🌍  Azure Cloud Infrastructure
+└── 🗂️  Resource Group (demo-rg)
+    └── 🌐  Virtual Network (demo-vnet)
+        └── 🌱  Subnets (frontend, backend, bastion, database, management)
+            ├── ⚙️  Load Balancer (demo-lb)
+            │   ├── 🌩️  Public IP (demo-pip)
+            │   ├── 🔗  Backend Pool
+            │   ├── 🚪  Health Probe
+            │   └── ⚖️  Load Balancer Rule
+            ├── 💻  Virtual Machines (VM1, VM2)
+            ├── 🏰  Bastion Host (demo-bastion)
+            └── 🗄️  SQL Server & Database (demo-sqlsrv, demo-db)
+
+</pre>
 </p>
 
 <details>
@@ -184,12 +188,32 @@ output "database_name" {
 
 <hr>
 
-<h2 align="center">🧹 Destroy Resources</h2> <p align="center"> When the environment is no longer needed, clean up all Azure resources: </p> <pre> terraform destroy -auto-approve </pre>
+<h2>🧹 Destroy Resources</h2>
+
+<p>When you’re done testing or deploying, you can clean up all created resources using:</p>
+
+<pre><code>terraform destroy -auto-approve</code></pre>
+
+<p><b>Note:</b> Always double-check your current workspace (Dev or Prod) before destroying resources to avoid accidental deletions.</p>
 
 <hr>
 
-<h2 align="center">💡 Key Highlights</h2> <ul> <li>🔁 Reusable modular design for scalability.</li> <li>⚖️ Automated Load Balancer setup for traffic distribution.</li> <li>🔒 Secure Bastion access without exposing VMs publicly.</li> <li>🧩 Dynamic subnet configuration.</li> <li>📊 Easily adaptable for multiple environments (Dev, QA, Prod).</li> <li>💾 SQL Server integration for backend data storage.</li> </ul>
+<h2>🤝 Contribution</h2>
+
+<p>
+  Contributions are always welcome!<br>
+  If you’d like to enhance or extend this project, please fork the repo and submit a pull request.
+</p>
 
 <hr>
 
-<h3 align="center">✨ Built with ❤️ using Terraform + Azure + DevOps ✨</h3>
+<h2>🛡️ License</h2>
+
+<p>This project is licensed under the <b>MIT License</b>.</p>
+
+<hr>
+
+<p align="center">
+  Made with ❤️ using <b>Terraform</b> and <b>Microsoft Azure</b>.<br>
+  <i>Automate • Deploy • Manage • Scale</i>
+</p>
