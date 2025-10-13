@@ -186,41 +186,11 @@ output "database_name" {
   description = "Name of the SQL Database"
 }
 
-<hr>
+## 🧹 Destroy Resources
 
-<h2 align="center">🧹 Destroy Resources</h2>
-
-<p align="center">
 When you’re done testing or deploying, you can clean up all created resources using:
-</p>
 
-<pre><code>terraform destroy -auto-approve</code></pre>
+```bash
+terraform destroy -auto-approve
 
-<p align="center">
-<b>Note:</b> Always double-check your current workspace (<code>Dev</code> or <code>Prod</code>) before destroying resources to avoid accidental deletions.
-</p>
-
-<hr>
-
-<h2 align="center">🤝 Contribution</h2>
-
-<p align="center">
-Contributions are always welcome!<br>
-If you’d like to enhance or extend this project, please fork the repository and submit a pull request.
-</p>
-
-<hr>
-
-<h2 align="center">🛡️ License</h2>
-
-<p align="center">
-This project is licensed under the <b>MIT License</b>.
-</p>
-
-<hr>
-
-<p align="center">
-Made with ❤️ using <b>Terraform</b> and <b>Microsoft Azure</b>.<br>
-<i>Automate • Deploy • Manage • Scale</i>
-</p>
 
