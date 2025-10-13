@@ -188,32 +188,39 @@ output "database_name" {
 
 <hr>
 
-<h2>🧹 Destroy Resources</h2>
+<h2 align="center">🧹 Destroy Resources</h2>
 
-<p>When you’re done testing or deploying, you can clean up all created resources using:</p>
+<p align="center">
+When you’re done testing or deploying, you can clean up all created resources using:
+</p>
 
 <pre><code>terraform destroy -auto-approve</code></pre>
 
-<p><b>Note:</b> Always double-check your current workspace (Dev or Prod) before destroying resources to avoid accidental deletions.</p>
-
-<hr>
-
-<h2>🤝 Contribution</h2>
-
-<p>
-  Contributions are always welcome!<br>
-  If you’d like to enhance or extend this project, please fork the repo and submit a pull request.
+<p align="center">
+<b>Note:</b> Always double-check your current workspace (<code>Dev</code> or <code>Prod</code>) before destroying resources to avoid accidental deletions.
 </p>
 
 <hr>
 
-<h2>🛡️ License</h2>
+<h2 align="center">🤝 Contribution</h2>
 
-<p>This project is licensed under the <b>MIT License</b>.</p>
+<p align="center">
+Contributions are always welcome!<br>
+If you’d like to enhance or extend this project, please fork the repository and submit a pull request.
+</p>
+
+<hr>
+
+<h2 align="center">🛡️ License</h2>
+
+<p align="center">
+This project is licensed under the <b>MIT License</b>.
+</p>
 
 <hr>
 
 <p align="center">
-  Made with ❤️ using <b>Terraform</b> and <b>Microsoft Azure</b>.<br>
-  <i>Automate • Deploy • Manage • Scale</i>
+Made with ❤️ using <b>Terraform</b> and <b>Microsoft Azure</b>.<br>
+<i>Automate • Deploy • Manage • Scale</i>
 </p>
+
