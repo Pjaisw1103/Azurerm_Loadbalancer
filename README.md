@@ -186,11 +186,21 @@ output "database_name" {
   description = "Name of the SQL Database"
 }
 
+<hr>
+
 ## 🧹 Destroy Resources
 
 When you’re done testing or deploying, you can clean up all created resources using:
 
 ```bash
 terraform destroy -auto-approve
+
+<hr>
+
+🤝 Contribution
+
+Contributions are always welcome!
+If you’d like to enhance or extend this project, please fork the repository and submit a pull request.
+
 
 
