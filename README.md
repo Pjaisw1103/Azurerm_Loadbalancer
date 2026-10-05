@@ -1,296 +1,190 @@
-<!-- 🌐 Terraform Azure Load Balancer Infrastructure -->
+# Azure Load Balancer Infrastructure
 
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&height=260&text=Azure%20Load%20Balancer%20Infrastructure&fontSize=38&fontAlignY=38&desc=Terraform%20%7C%20Azure%20Networking%20%7C%20High%20Availability&descSize=18&descAlignY=58&fontColor=ffffff&animation=fadeIn&color=0:0078D4,50:623CE4,100:0D1117"/>
-</p>
+Modular Infrastructure as Code (IaC) powered by **Terraform** to deploy a scalable, highly available **Azure Load Balancer** architecture along with networking, compute, secure remote access, and database tiers.
 
-<p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=22&duration=2500&pause=1000&color=0078D4&center=true&vCenter=true&width=900&lines=Terraform+Based+Azure+Infrastructure;Azure+Load+Balancer+%7C+Virtual+Network+%7C+Bastion;Modular+Infrastructure+as+Code;Scalable+%26+Secure+Cloud+Networking"/>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Terraform-623CE4?style=for-the-badge&logo=terraform&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Microsoft%20Azure-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white"/>
-  <img src="https://img.shields.io/badge/IaC-Infrastructure%20as%20Code-0D1117?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/Status-Active-22C55E?style=for-the-badge"/>
-</p>
+![Terraform](https://img.shields.io/badge/Terraform-v1.5+-844FBA?style=flat-square&logo=terraform&logoColor=white)
+![Azure](https://img.shields.io/badge/Azure-Provider%20v4.44-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)
+![IaC](https://img.shields.io/badge/IaC-Modular-22C55E?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Active-blue?style=flat-square)
 
 ---
 
-## 📌 Project Overview
+## 📌 Table of Contents
 
-This project provisions a complete **Azure Load Balancer infrastructure** using **Terraform modules**.
-
-It includes networking, compute, secure access, traffic distribution, and database resources in a modular Infrastructure as Code structure.
+- [Overview](#-overview)
+- [Architecture](#-architecture)
+- [Project Structure](#-project-structure)
+- [Modules Overview](#-modules-overview)
+- [Prerequisites](#-prerequisites)
+- [Deployment Guide](#-deployment-guide)
+- [Cleanup](#-cleanup)
+- [Author](#-author)
 
 ---
 
-## 🧱 Architecture
+## 🎯 Overview
 
-```text
-Azure Cloud
-│
-├── Resource Group
-│   └── demo-rg
-│
-├── Virtual Network
-│   └── demo-vnet
-│       ├── frontend-subnet
-│       ├── backend-subnet
-│       ├── bastion-subnet
-│       ├── database-subnet
-│       └── management-subnet
-│
-├── Public Load Balancer
-│   ├── Public IP
-│   ├── Backend Address Pool
-│   ├── Health Probe
-│   └── Load Balancing Rule
-│
-├── Virtual Machines
-│   ├── VM1
-│   └── VM2
-│
-├── Azure Bastion
-│   └── Secure VM Access
-│
-└── Azure SQL
-    ├── SQL Server
-    └── SQL Database
+This project provides end-to-end automated deployment of an Azure environment designed for high availability and security. It separates infrastructure concerns into reusable Terraform modules, enabling easy environment replication and lifecycle management.
+
+### Key Capabilities
+
+- **Traffic Load Balancing**: Azure Public Load Balancer distributing incoming web requests across backend frontend virtual machines.
+- **Secure Remote Access**: Azure Bastion Host deployed into a dedicated subnet (`AzureBastionSubnet`) for secure SSH/RDP access without exposing public IPs on VMs.
+- **Segmented Networking**: Dedicated Azure Virtual Network (`vnet-infra`) with custom frontend and bastion subnets.
+- **Database Tier**: Managed Azure MSSQL Server and MSSQL Database provisioning.
+- **Modular IaC Design**: 10 decoupled Terraform modules for granular resource management and reusability.
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+graph TD
+    Client[Public Traffic] -->|Port 80/443| PIP_LB[Public IP: pip-loadbalancer]
+    Admin[Administrator] -->|HTTPS / Bastion| PIP_BAS[Public IP: pip-bastion]
+
+    subgraph RG ["Resource Group: rg-demo"]
+        subgraph VNet ["Virtual Network: vnet-infra"]
+            subgraph BastionSubnet ["Subnet: AzureBastionSubnet (10.0.0.0/26)"]
+                BastionHost["Azure Bastion: demo-bastion"]
+            end
+
+            subgraph FrontendSubnet ["Subnet: subnet-frontend (10.0.1.0/24)"]
+                VM1["VM Frontend 01 (vm-frontend01)"]
+                VM2["VM Frontend 02 (vm-frontend02)"]
+            end
+        end
+
+        LB["Azure Load Balancer"]
+        SQLServer["Azure MSSQL Server: infra-server"]
+        SQLDB["Azure MSSQL Database: infra-database"]
+    end
+
+    PIP_LB --> LB
+    PIP_BAS --> BastionHost
+    LB -->|Backend Pool| VM1
+    LB -->|Backend Pool| VM2
+    BastionHost -.->|Secure Access| VM1
+    BastionHost -.->|Secure Access| VM2
+    VM1 -.-> SQLServer
+    VM2 -.-> SQLServer
+    SQLServer --> SQLDB
 ```
-
----
-
-## ✨ Key Features
-
-| Feature                  | Description                                 |
-| ------------------------ | ------------------------------------------- |
-| 🌐 Azure Virtual Network | Isolated network environment for resources  |
-| ⚖️ Azure Load Balancer   | Distributes traffic across backend VMs      |
-| 💻 Virtual Machines      | Backend compute resources for workloads     |
-| 🏰 Azure Bastion         | Secure VM access without public IP exposure |
-| 🗄️ Azure SQL Database   | Managed database layer                      |
-| 🏗️ Terraform Modules    | Reusable modular infrastructure components  |
-| 🔐 Secure Networking     | Subnet-based resource separation            |
-
----
-
-## 🛠️ Tech Stack
-
-<p align="center">
-  <img src="https://skillicons.dev/icons?i=azure,terraform,linux,git,github,vscode"/>
-</p>
-
-| Tool                    | Purpose                     |
-| ----------------------- | --------------------------- |
-| **Terraform**           | Infrastructure provisioning |
-| **Microsoft Azure**     | Cloud platform              |
-| **Azure Load Balancer** | Traffic distribution        |
-| **Azure Bastion**       | Secure remote access        |
-| **Azure SQL**           | Managed database            |
-| **GitHub**              | Version control             |
 
 ---
 
 ## 📁 Project Structure
 
 ```text
-Azure_LoadBalancer_Project/
+Azurerm_Loadbalancer/
+├── Environment/                    # Target deployment environment
+│   ├── main.tf                     # Environment module invocations & orchestration
+│   └── provider.tf                 # Terraform required version & AzureRM provider configuration
 │
-├── Environment/
-│   ├── main.tf
-│   ├── provider.tf
-│   ├── variables.tf
-│   ├── outputs.tf
-│   ├── terraform.tfvars
-│   └── README.md
-│
-└── Module/
-    ├── azurerm_resource_group/
-    │   └── main.tf
-    ├── azurerm_virtual_network/
-    │   └── main.tf
-    ├── azurerm_subnet/
-    │   └── main.tf
-    ├── azurerm_public_ip/
-    │   └── main.tf
-    ├── azurerm_loadbalancer/
-    │   └── main.tf
-    ├── azurerm_lb_association/
-    │   └── main.tf
-    ├── azurerm_virtual_machine/
-    │   └── main.tf
-    ├── azurerm_bastion/
-    │   └── main.tf
-    ├── azurerm_mssql_server/
-    │   └── main.tf
-    └── azurerm_mssql_database/
-        └── main.tf
+└── Module/                         # Reusable infrastructure modules
+    ├── azurerm_resource_group/     # Azure Resource Group module
+    ├── azurerm_virtual_network/    # Virtual Network module
+    ├── azurerm_subnet/             # Subnet module
+    ├── azurerm_public_ip/          # Public IP module
+    ├── azurerm_loadbalancer/       # Azure Load Balancer module
+    ├── azurerm_lb_association/     # NIC to Load Balancer backend pool association
+    ├── azurerm_virtual_machine/    # Virtual Machine, NIC, and NSG module
+    ├── azurerm_bastion/            # Azure Bastion Host module
+    ├── azurerm_mssql_server/       # MSSQL Server module
+    └── azurerm_mssql_database/     # MSSQL Database module
 ```
+
+---
+
+## 🧩 Modules Overview
+
+| Module Directory | Description | Core Terraform Resource |
+| :--- | :--- | :--- |
+| `azurerm_resource_group` | Manages target resource group container | `azurerm_resource_group` |
+| `azurerm_virtual_network` | Provisions isolated cloud network | `azurerm_virtual_network` |
+| `azurerm_subnet` | Creates subnets for workloads and Bastion | `azurerm_subnet` |
+| `azurerm_public_ip` | Allocates public IPs for Load Balancer & Bastion | `azurerm_public_ip` |
+| `azurerm_loadbalancer` | Deploys Azure Load Balancer resource | `azurerm_lb` |
+| `azurerm_lb_association` | Associates VM NICs with LB Backend Address Pool | `azurerm_network_interface_backend_address_pool_association` |
+| `azurerm_virtual_machine` | Provisions Virtual Machine, NIC, and Network Security Group | `azurerm_linux_virtual_machine` / `azurerm_network_interface` |
+| `azurerm_bastion` | Deploys Azure Bastion Host for secure remote access | `azurerm_bastion_host` |
+| `azurerm_mssql_server` | Deploys managed SQL Server instance | `azurerm_mssql_server` |
+| `azurerm_mssql_database` | Creates database on MSSQL Server | `azurerm_mssql_database` |
 
 ---
 
 ## ⚙️ Prerequisites
 
-Before deploying this project, make sure you have:
+Before deploying this infrastructure, ensure you have:
 
-* Terraform `v1.5+`
-* Azure CLI installed
-* Active Azure subscription
-* Azure account logged in using:
-
-```bash
-az login
-```
-
-* Required permissions to create:
-
-  * Resource Groups
-  * Virtual Networks
-  * Load Balancers
-  * Virtual Machines
-  * Bastion Host
-  * Azure SQL resources
+1. **Terraform**: `v1.5.0` or higher installed.
+2. **Azure CLI**: Installed and authenticated.
+3. **Azure Subscription**: Active subscription with Owner or Contributor privileges.
+4. **Azure Login**:
+   ```bash
+   az login
+   az account set --subscription "YOUR_SUBSCRIPTION_ID"
+   ```
 
 ---
 
 ## 🚀 Deployment Guide
 
-### 1️⃣ Clone the Repository
+### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/Pjaisw1103/Azure_LoadBalancer_Project.git
-cd Azure_LoadBalancer_Project/Environment
+git clone https://github.com/Pjaisw1103/Azurerm_Loadbalancer.git
+cd Azurerm_Loadbalancer/Environment
 ```
 
-### 2️⃣ Initialize Terraform
+### Step 2: Initialize Terraform
+
+Initialize the environment directory to download provider dependencies (`hashicorp/azurerm v4.44.0`):
 
 ```bash
 terraform init
 ```
 
-### 3️⃣ Format Terraform Code
+### Step 3: Validate Configuration
+
+Check code formatting and validate configuration syntax:
 
 ```bash
 terraform fmt -recursive
-```
-
-### 4️⃣ Validate Configuration
-
-```bash
 terraform validate
 ```
 
-### 5️⃣ Preview Infrastructure
+### Step 4: Plan Infrastructure Deployment
+
+Review the execution plan before creating cloud resources:
 
 ```bash
 terraform plan
 ```
 
-### 6️⃣ Deploy Resources
+### Step 5: Provision Resources
+
+Apply the Terraform configuration to create all resources in Azure:
 
 ```bash
 terraform apply -auto-approve
 ```
 
-### 7️⃣ View Outputs
-
-```bash
-terraform output
-```
-
 ---
 
-## 📤 Terraform Outputs
+## 🧹 Cleanup
 
-```hcl
-output "rg_name" {
-  value       = module.azurerm-rg.rg-name
-  description = "Name of the Resource Group"
-}
-
-output "vnet_name" {
-  value       = module.azurerm-vnet.vnet-name
-  description = "Name of the Virtual Network"
-}
-
-output "load_balancer_name" {
-  value       = module.azurerm-lb.lb-name
-  description = "Name of the Azure Load Balancer"
-}
-
-output "public_ip_name" {
-  value       = module.azurerm-pip.pip-name
-  description = "Public IP used by Load Balancer"
-}
-
-output "bastion_name" {
-  value       = module.azurerm-bastion.bastion-name
-  description = "Name of the Bastion Host"
-}
-
-output "sql_server_name" {
-  value       = module.azurerm-sqlserver.sqlserver-name
-  description = "Name of the SQL Server"
-}
-
-output "database_name" {
-  value       = module.azurerm-sqldb.sqldb-name
-  description = "Name of the SQL Database"
-}
-```
-
----
-
-## 🧹 Destroy Infrastructure
-
-To remove all deployed Azure resources:
+To remove all provisioned Azure resources and avoid incurring unwanted charges:
 
 ```bash
+cd Azurerm_Loadbalancer/Environment
 terraform destroy -auto-approve
 ```
 
 ---
 
-## 📌 Use Cases
+## 👤 Author
 
-* Azure networking practice
-* Terraform modular infrastructure learning
-* Load balancer architecture demo
-* DevOps portfolio project
-* Infrastructure as Code implementation
-
----
-
-## ✅ Project Highlights
-
-* Built using modular Terraform structure
-* Includes Azure networking and compute resources
-* Implements public Load Balancer architecture
-* Uses Bastion for secure VM access
-* Includes SQL Server and Database provisioning
-* Suitable for DevOps and Cloud portfolio demonstration
-
----
-
-## 🤝 Author
-
-<p align="center">
-  <b>Priya Jaiswal</b><br/>
-  Azure Cloud & DevOps Enthusiast
-</p>
-
-<p align="center">
-  <a href="https://github.com/Pjaisw1103">
-    <img src="https://img.shields.io/badge/GitHub-Pjaisw1103-0D1117?style=for-the-badge&logo=github"/>
-  </a>
-  <a href="https://linkedin.com/in/priya-jaiswal1103">
-    <img src="https://img.shields.io/badge/LinkedIn-Priya%20Jaiswal-0078D4?style=for-the-badge&logo=linkedin"/>
-  </a>
-</p>
-
----
-
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&height=120&section=footer&color=0:0D1117,50:623CE4,100:0078D4"/>
-</p>
+**Priya Jaiswal**
+- GitHub: [@Pjaisw1103](https://github.com/Pjaisw1103)
+- LinkedIn: [Priya Jaiswal](https://linkedin.com/in/priya-jaiswal1103)
